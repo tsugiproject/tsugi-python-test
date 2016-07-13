@@ -1,0 +1,23 @@
+{ 
+  "resource_link_id" : "667587732",
+  "resource_link_title" : "Activity: attend",
+  "resource_link_description" : "A weekly blog.",
+  "tool_consumer_info_product_family_code" : "ims",
+  "tool_consumer_info_version" : "1.1",
+  "tool_consumer_instance_guid" : "lmsng.ischool.edu",
+  "tool_consumer_instance_description" : "University of Information",
+  "oauth_callback" : "about:blank",
+  "launch_presentation_css_url" : "http://localhost:8888/tsugi/lms.css",
+  "lti_version" : "LTI-1p0",
+  "lti_message_type" : "basic-lti-launch-request",
+  "context_id" : "456434513",
+  "context_label" : "SI106",
+  "context_title" : "Introduction to Programming",
+  "user_id" : "292832126",
+  "lis_person_name_full" : "John Student",
+  "lis_person_contact_email_primary" : "john@ischool.edu",
+  "lis_person_sourcedid" : "ischool.edu:john",
+  "lis_result_sourcedid" : "99999999999999999999999999999999",
+  "lis_outcome_service_url" : "http://localhost:8888/tsugi/common/tool_consumer_outcome.php?b64=MTIzNDU6OjpzZWNyZXQ6Ojo=",
+  "roles" : "Learner" 
+}

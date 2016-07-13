@@ -1,2 +1,26 @@
-# tsugi-python-test
-A functionality test for any version of Tsugi
+
+A Functionality Test for Tsugi
+==============================
+
+The idea is to develop a functionality / integration test that can
+test any version of Tsugi in any language.
+
+This is early days :)
+
+Install pip (if necessary):
+
+    https://pip.pypa.io/en/stable/installing/
+
+    curl -O https://bootstrap.pypa.io/get-pip.py
+    python get-pip.py
+
+Install packages
+
+    pip3 install --user requests
+    pip3 install --user oauthlib
+
+Run:
+
+    python3 test.py
+
+TODO: Lots of stuff

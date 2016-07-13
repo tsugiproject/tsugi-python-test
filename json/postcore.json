@@ -1,0 +1,14 @@
+{ 
+  "resource_link_id" : "667587732",
+  "resource_link_title" : "Activity: attend",
+  "resource_link_description" : "A weekly blog.",
+  "tool_consumer_info_product_family_code" : "ims",
+  "tool_consumer_info_version" : "1.1",
+  "tool_consumer_instance_guid" : "lmsng.ischool.edu",
+  "tool_consumer_instance_description" : "University of Information",
+  "launch_presentation_css_url" : "http://localhost:8888/tsugi/lms.css",
+  "lti_version" : "LTI-1p0",
+  "lti_message_type" : "basic-lti-launch-request",
+  "ext_submit" : "Finish Launch",
+  "oauth_callback" : "about:blank"
+}
