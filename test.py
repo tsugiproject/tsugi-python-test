@@ -1,27 +1,30 @@
 import requests
 import json
 from oauthlib.oauth1 import Client
-import pymysql.cursors
+import pymysql
+import databaseconfig as CFG
 
-connection = pymysql.connect(host='localhost',
-                             port=8889,
-                             user='ltiuser',
-                             password='ltipassword',
-                             db='tsugi',
+connection = pymysql.connect(host=CFG.host,
+                             port=CFG.port,
+                             user=CFG.user,
+                             password=CFG.password,
+                             db=CFG.db,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
-print(connection)
+pymysql.paramstyle = 'named'
 
-try:
-    with connection.cursor() as cursor:
-        # Read a single record
-        sql = "SELECT * FROM `lti_user`"
-        # cursor.execute(sql, ('webmaster@python.org',))
-        cursor.execute(sql)
-        result = cursor.fetchone()
-        print(result)
-finally:
-    connection.close()
+cursor = connection.cursor()
+
+sql = "DELETE FROM lti_user WHERE user_key LIKE 'unittest:%' AND key_id IN (SELECT key_id from lti_key WHERE key_key='12345')"
+cursor.execute(sql)
+connection.commit();
+print('Removed {} old unittest users'.format(cursor.rowcount))
+
+exit();
+# sql = "SELECT * FROM `lti_user`"
+# cursor.execute(sql)
+# result = cursor.fetchone()
+# print(result)
 
 print('Yo')
 

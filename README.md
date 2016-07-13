@@ -24,4 +24,9 @@ Run:
 
     python3 test.py
 
+Notes:
+
+    http://pymysql.readthedocs.io/en/latest/user/examples.html
+    https://github.com/idan/oauthlib/blob/master/oauthlib/oauth1/rfc5849/__init__.py
+
 TODO: Lots of stuff
