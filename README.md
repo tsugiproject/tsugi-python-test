@@ -18,6 +18,7 @@ Install packages
 
     pip3 install --user requests
     pip3 install --user oauthlib
+    pip3 install --user PyMySQL
 
 Run:
 

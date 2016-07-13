@@ -1,7 +1,27 @@
 import requests
 import json
 from oauthlib.oauth1 import Client
+import pymysql.cursors
 
+connection = pymysql.connect(host='localhost',
+                             port=8889,
+                             user='ltiuser',
+                             password='ltipassword',
+                             db='tsugi',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+print(connection)
+
+try:
+    with connection.cursor() as cursor:
+        # Read a single record
+        sql = "SELECT * FROM `lti_user`"
+        # cursor.execute(sql, ('webmaster@python.org',))
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        print(result)
+finally:
+    connection.close()
 
 print('Yo')
 
