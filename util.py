@@ -32,11 +32,17 @@ def launch(url, post) :
     r = requests.post(url, data=body, headers=headers, allow_redirects=False)
     if ( r.status_code == 302 ) :
         new_url = r.headers.get('Location', False);
-        print('New Url',new_url);
+        # print('New Url',new_url);
         error_url = post.get('launch_presentation_return_url', False)
-        print('Error url',error_url);
+        # print('Error url',error_url);
         if ( new_url.startswith(error_url) ) :
-            print('Redirect to return_url')
+            # print('Redirect to return_url')
             return r
         r = requests.get(new_url);
     return r
+
+def dumpr(r) :
+    print(r.status_code)
+    print(r.headers)
+    print(r.text)
+
