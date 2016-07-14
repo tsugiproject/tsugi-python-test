@@ -1,4 +1,3 @@
-import databaseconfig as CFG
 import requests
 from oauthlib.oauth1 import Client
 
@@ -24,8 +23,7 @@ def cleanunit(connection, cursor) :
     cursor.execute(sql)
     connection.commit();
 
-def launch(url, post) :
-    global CFG
+def launch(CFG,url, post) :
     header = {'Content-Type' : 'application/x-www-form-urlencoded'}
     client = Client(CFG.oauth_consumer_key, client_secret=CFG.oauth_secret, signature_type='BODY')
     uri, headers, body = client.sign(url, 'POST', post, header)

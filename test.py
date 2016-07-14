@@ -1,9 +1,18 @@
 import pymysql
+import random
 import databaseconfig as CFG
 import post as POST
 import util as U
 
 url = 'http://localhost:8888/tsugi/mod/map/index.php'
+user1 = 'unittest:user:'+str(random.random())
+user2 = 'unittest:user:'+str(random.random())
+context1 = 'unittest:context:'+str(random.random())
+context2 = 'unittest:context:'+str(random.random())
+link1 = 'unittest:link:'+str(random.random())
+link2 = 'unittest:link:'+str(random.random())
+link3 = 'unittest:link:'+str(random.random())
+print(user1,user2,context1,context2,link1,link2,link3)
 
 connection = pymysql.connect(host=CFG.host,
                              port=CFG.port,
@@ -23,12 +32,16 @@ print('Sending a launch with a bad secret... ',end='')
 post = {}
 post.update(POST.core)
 post.update(POST.inst)
+post['resource_link_id'] = link1
+post['context_id'] = context1
+post['user_id'] = user1
 
-r = U.launch(url,post)
+CFG.oauth_secret = "bad_news"
+r = U.launch(CFG,url,post)
 if ( r.status_code != 302 ) :
     print('Expected a redirect to the error URL')
     U.dumpr(r)
-    exit();
+    exit()
 
 print('Received 302 - Success')
 
@@ -41,18 +54,18 @@ if ( result == None ) :
     print('Unable to load secret for key',CFG.oauth_consumer_key)
     exit()
 
-CFG.oauth_secret = result['secret'];
+CFG.oauth_secret = result['secret']
 
 header = {'Content-Type' : 'application/x-www-form-urlencoded'}
 
-print('Sending a launch with a good secret... ',end='');
+print('Sending a launch with a good secret... ',end='')
 
-r = U.launch(url,post)
+r = U.launch(CFG,url,post)
 if ( r.status_code != 200 ) :
     print('Launch failed')
-    U.dumpr(r);
-    exit();
+    U.dumpr(r)
+    exit()
 
-print("Received 200 - Success");
+print("Received 200 - Success")
 
 
