@@ -1,5 +1,7 @@
 import pymysql
 import random
+from urllib.parse import urlparse
+import urllib
 import databaseconfig as CFG
 import post as POST
 import util as U
@@ -44,6 +46,14 @@ if ( r.status_code != 302 ) :
 
 print('Received 302 - Success')
 
+# U.dumpr(r)
+redirect = r.headers['Location']
+up = urlparse(redirect)
+qu = urllib.parse.parse_qs(up.query)
+print (qu['lti_errormsg'][0])
+# print (qu['detail'][0])
+
+
 print('Loading secret for',CFG.oauth_consumer_key,'from the database')
 
 sql = "SELECT secret FROM lti_key WHERE key_key = %s"
@@ -74,6 +84,10 @@ print(u)
 c = U.getcontext(conn, post)
 print(c)
 
+l = U.getlink(conn, post)
+print(l)
+
 m = U.getmembership(conn, u, c)
 print(m)
 
+U.extractPost(post)
