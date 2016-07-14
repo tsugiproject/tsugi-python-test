@@ -37,7 +37,7 @@ post['resource_link_id'] = link1
 post['context_id'] = context1
 post['user_id'] = user1
 
-CFG.oauth_secret = "bad_news"
+CFG.oauth_secret = 'bad_news'
 r = U.launch(CFG,url,post)
 if ( r.status_code != 302 ) :
     print('Expected a redirect to the error URL')
@@ -56,7 +56,7 @@ print (qu['lti_errormsg'][0])
 
 print('Loading secret for',CFG.oauth_consumer_key,'from the database')
 
-sql = "SELECT secret FROM lti_key WHERE key_key = %s"
+sql = 'SELECT secret FROM lti_key WHERE key_key = %s'
 cursor.execute(sql, (CFG.oauth_consumer_key, ))
 result = cursor.fetchone()
 if ( result == None ) :
@@ -76,24 +76,8 @@ if ( r.status_code != 200 ) :
     U.dumpr(r)
     exit()
 
-print("Received 200 - Success")
+print('Received 200 - Success')
 
-print('--- User');
-u = U.getuser(conn, post)
-print(u)
-
-print('--- Context');
-c = U.getcontext(conn, post)
-print(c)
-
-print('--- Link');
-l = U.getlink(conn, post)
-print(l)
-
-print('--- Membership');
-m = U.getmembership(conn, u, c)
-print(m)
-
-print('-----------------------')
-stuff = U.extractPost(post)
-print(stuff)
+print('Checking database ... ',end='')
+U.verifyDb(conn,post)
+print('Passed')

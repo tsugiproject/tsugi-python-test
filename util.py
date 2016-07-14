@@ -84,6 +84,65 @@ def getmembership(conn,user,context) :
     cursor.close()
     return result
 
+def getresult(conn,user,link) :
+    user_id = user.get('user_id',False)
+    if user_id is False :
+        print('Could not find user_id')
+        exit()
+    link_id = link.get('link_id',False)
+    if link_id is False :
+        print('Could not find link_id')
+        exit()
+    cursor = conn.cursor()
+    sql = "SELECT R.*,S.service_key FROM lti_result AS R LEFT JOIN lti_service as S ON R.service_id = S.service_id WHERE R.user_id = %s AND R.link_id = %s"
+    cursor.execute(sql, (user_id, link_id))
+    result = cursor.fetchone()
+    conn.commit()
+    cursor.close()
+    return result
+
+def switch(di,old,new) :
+    if old not in di : return
+    di[new] = di[old]
+    del(di[old])
+
+def mapuser(user) :
+    ret = user
+    switch(ret,'displayname','user_displayname')
+    switch(ret,'email','user_email')
+    return ret
+
+def mapcontext(context) :
+    ret = context
+    switch(ret,'title','context_title')
+    switch(ret,'settings_url','context_settings_url')
+    return ret
+
+def maplink(link) :
+    ret = link
+    switch(ret,'title','link_title')
+    switch(ret,'settings_url','link_settings_url')
+    return ret
+
+def mapresult(result) :
+    ret = result
+    switch(ret,'service_key','service')
+    return ret
+
+def extractDb(conn,post):
+    u = getuser(conn, post)
+    c = getcontext(conn, post)
+    l = getlink(conn, post)
+    m = getmembership(conn, u, c)
+    r = getresult(conn, u, l)
+    ext = dict()
+    ext.update(mapuser(u))
+    ext.update(mapcontext(c))
+    ext.update(maplink(l))
+    ext.update(mapresult(r))
+    ext.update(m)
+    return ext
+
 def extractPost(post) :
     fixed = dict()
     for (k,v) in post.items():
@@ -167,5 +226,18 @@ def extractPost(post) :
 
     return ret
 
-
-
+def verifyDb(conn,post) :
+    extract = extractPost(post)
+    db = extractDb(conn, post)
+    for (k,v) in extract.items() :
+        # Might want to fix this...
+        if k == 'resource_link_description' : continue
+        if k.startswith('launch_') : continue
+        if k.startswith('tool_') : continue
+        if k not in db:
+            print('Missing post key in database',k)
+            print('------ Post')
+            print(extract)
+            print('------ Db')
+            print(db)
+            exit()
