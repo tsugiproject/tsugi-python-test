@@ -6,7 +6,14 @@ import databaseconfig as CFG
 import post as POST
 import util as U
 
-url = 'http://localhost:8888/tsugi/mod/map/index.php'
+inp = input('Test Java or PHP? ')
+if inp.lower().startswith('j') :
+    url = 'http://localhost:8080/tsugi-servlet/hello'
+else :
+    url = 'http://localhost:8888/tsugi/mod/map/index.php'
+
+print('Test URL:',url)
+
 user1 = 'unittest:user:'+str(random.random())
 user2 = 'unittest:user:'+str(random.random())
 context1 = 'unittest:context:'+str(random.random())
@@ -38,7 +45,6 @@ post['user_id'] = user1
 print('Sending a launch with a bad secret... ',end='')
 CFG.oauth_secret = 'bad_news'
 r = U.launch(CFG,url,post, 302)
-print('Received 302 - Success')
 
 redirect = r.headers['Location']
 up = urlparse(redirect)

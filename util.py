@@ -53,7 +53,7 @@ def launch(CFG, url, post, status=200) :
             print('Received 302 - Success')
             return r
 
-        r = requests.get(new_url)
+        r = requests.get(new_url, cookies=r.cookies)
 
     if ( status != 200 ) :
         print('Expected a failed launch')
