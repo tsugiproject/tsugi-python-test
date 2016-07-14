@@ -2,6 +2,11 @@ import requests
 import re
 from oauthlib.oauth1 import Client
 
+def abort() :
+    print('')
+    print('**** Test terminated with an error')
+    quit()
+
 def cleanunit(conn, cursor) :
     sql = "DELETE FROM lti_user WHERE user_key LIKE 'unittest:%' AND key_id IN (SELECT key_id from lti_key WHERE key_key='12345')"
     cursor.execute(sql)
@@ -24,20 +29,35 @@ def cleanunit(conn, cursor) :
     cursor.execute(sql)
     conn.commit()
 
-def launch(CFG,url, post) :
+# Expected ultimate status
+def launch(CFG, url, post, status=200) :
     header = {'Content-Type' : 'application/x-www-form-urlencoded'}
     client = Client(CFG.oauth_consumer_key, client_secret=CFG.oauth_secret, signature_type='BODY')
     uri, headers, body = client.sign(url, 'POST', post, header)
     r = requests.post(url, data=body, headers=headers, allow_redirects=False)
     if ( r.status_code == 302 ) :
         new_url = r.headers.get('Location', False)
-        # print('New Url',new_url)
+        if new_url is False:
+            print('No Location header found on redirect')
+            dumpr(r)
+            abort()
+
         error_url = post.get('launch_presentation_return_url', False)
-        # print('Error url',error_url)
         if ( new_url.startswith(error_url) ) :
-            # print('Redirect to return_url')
+            if ( status == 200 ) :
+                print('Expected a successful launch')
+                dumpr(r)
+                abort()
+            print('Received 302 - Success')
             return r
+
         r = requests.get(new_url)
+
+    if ( status != 200 ) :
+        print('Expected a failed launch')
+        dumpr(r)
+        abort()
+    print('Received 200 - Success')
     return r
 
 def dumpr(r) :
@@ -50,7 +70,7 @@ def getrow(conn,post,post_key,table) :
     key = post.get(post_key, False)
     if key is False :
         print('Could not find',post_key,'in POST data')
-        exit()
+        abort()
     sql = "SELECT * FROM lti_"+table+" WHERE "+table+"_key = %s"
     cursor.execute(sql, (key, ))
     result = cursor.fetchone()
@@ -71,11 +91,11 @@ def getmembership(conn,user,context) :
     user_id = user.get('user_id',False)
     if user_id is False :
         print('Could not find user_id')
-        exit()
+        abort()
     context_id = context.get('context_id',False)
     if context_id is False :
         print('Could not find context_id')
-        exit()
+        abort()
     cursor = conn.cursor()
     sql = "SELECT * FROM lti_membership WHERE user_id = %s AND context_id = %s"
     cursor.execute(sql, (user_id, context_id))
@@ -88,11 +108,11 @@ def getresult(conn,user,link) :
     user_id = user.get('user_id',False)
     if user_id is False :
         print('Could not find user_id')
-        exit()
+        abort()
     link_id = link.get('link_id',False)
     if link_id is False :
         print('Could not find link_id')
-        exit()
+        abort()
     cursor = conn.cursor()
     sql = "SELECT R.*,S.service_key FROM lti_result AS R LEFT JOIN lti_service as S ON R.service_id = S.service_id WHERE R.user_id = %s AND R.link_id = %s"
     cursor.execute(sql, (user_id, link_id))
@@ -227,6 +247,7 @@ def extractPost(post) :
     return ret
 
 def verifyDb(conn,post) :
+    print('Checking database ... ',end='')
     extract = extractPost(post)
     db = extractDb(conn, post)
     for (k,v) in extract.items() :
@@ -240,4 +261,5 @@ def verifyDb(conn,post) :
             print(extract)
             print('------ Db')
             print(db)
-            exit()
+            abort()
+    print('Passed')

@@ -28,8 +28,6 @@ cursor = conn.cursor()
 # Clean up old unit test users and contexts
 U.cleanunit(conn, cursor)
 
-print('Sending a launch with a bad secret... ',end='')
-
 post = {}
 post.update(POST.core)
 post.update(POST.inst)
@@ -37,16 +35,11 @@ post['resource_link_id'] = link1
 post['context_id'] = context1
 post['user_id'] = user1
 
+print('Sending a launch with a bad secret... ',end='')
 CFG.oauth_secret = 'bad_news'
-r = U.launch(CFG,url,post)
-if ( r.status_code != 302 ) :
-    print('Expected a redirect to the error URL')
-    U.dumpr(r)
-    exit()
-
+r = U.launch(CFG,url,post, 302)
 print('Received 302 - Success')
 
-# U.dumpr(r)
 redirect = r.headers['Location']
 up = urlparse(redirect)
 qu = urllib.parse.parse_qs(up.query)
@@ -61,7 +54,7 @@ cursor.execute(sql, (CFG.oauth_consumer_key, ))
 result = cursor.fetchone()
 if ( result == None ) :
     print('Unable to load secret for key',CFG.oauth_consumer_key)
-    exit()
+    U.abort()
 conn.commit()
 
 CFG.oauth_secret = result['secret']
@@ -69,15 +62,15 @@ CFG.oauth_secret = result['secret']
 header = {'Content-Type' : 'application/x-www-form-urlencoded'}
 
 print('Sending a launch with a good secret... ',end='')
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+
+print('Sending minimal launch to check DB persistence... ',end='')
+post = {}
+post.update(POST.core)
+post['resource_link_id'] = link1
+post['context_id'] = context1
+post['user_id'] = user1
 
 r = U.launch(CFG,url,post)
-if ( r.status_code != 200 ) :
-    print('Launch failed')
-    U.dumpr(r)
-    exit()
-
-print('Received 200 - Success')
-
-print('Checking database ... ',end='')
 U.verifyDb(conn,post)
-print('Passed')
