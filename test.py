@@ -74,3 +74,14 @@ post['user_id'] = user1
 
 r = U.launch(CFG,url,post)
 U.verifyDb(conn,post)
+
+print('Changing context_title... ',end='')
+post['context_title'] = 'Now for something completely dfferent';
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+
+print('Changing lis_person_contact_email_primary... ',end='')
+post['lis_person_contact_email_primary'] = 'p@p.com';
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+

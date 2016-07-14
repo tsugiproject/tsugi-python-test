@@ -1,10 +1,12 @@
 import requests
 import re
+import traceback
 from oauthlib.oauth1 import Client
 
 def abort() :
     print('')
     print('**** Test terminated with an error')
+    traceback.print_stack()
     quit()
 
 def cleanunit(conn, cursor) :
@@ -61,8 +63,10 @@ def launch(CFG, url, post, status=200) :
     return r
 
 def dumpr(r) :
-    print(r.status_code)
+    print('--- Response / Headers ---')
+    print('http status',r.status_code)
     print(r.headers)
+    print('--- Body ---')
     print(r.text)
 
 def getrow(conn,post,post_key,table) :
