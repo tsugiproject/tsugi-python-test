@@ -6,4 +6,4 @@ password='ltipassword'
 db='tsugi'
 
 oauth_consumer_key = '12345';
-oauth_secret = 'secret';
+oauth_secret = 'xsecret';

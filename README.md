@@ -26,6 +26,7 @@ Run:
 
 Notes:
 
+    http://docs.python-requests.org/en/master/
     http://pymysql.readthedocs.io/en/latest/user/examples.html
     https://github.com/idan/oauthlib/blob/master/oauthlib/oauth1/rfc5849/__init__.py
 

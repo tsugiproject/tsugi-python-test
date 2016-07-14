@@ -9,6 +9,7 @@ core = {
   "tool_consumer_instance_guid" : "lmsng.ischool.edu",
   "tool_consumer_instance_description" : "University of Information",
   "launch_presentation_css_url" : "http://localhost:8888/tsugi/lms.css",
+  "launch_presentation_return_url" : "http://lmsng.school.edu/portal/123/page/988/",
   "oauth_callback" : "about:blank"
 }
 
