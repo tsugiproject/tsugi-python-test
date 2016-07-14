@@ -78,16 +78,22 @@ if ( r.status_code != 200 ) :
 
 print("Received 200 - Success")
 
+print('--- User');
 u = U.getuser(conn, post)
 print(u)
 
+print('--- Context');
 c = U.getcontext(conn, post)
 print(c)
 
+print('--- Link');
 l = U.getlink(conn, post)
 print(l)
 
+print('--- Membership');
 m = U.getmembership(conn, u, c)
 print(m)
 
-U.extractPost(post)
+print('-----------------------')
+stuff = U.extractPost(post)
+print(stuff)
