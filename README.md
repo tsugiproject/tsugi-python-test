@@ -28,6 +28,7 @@ Notes:
 
     http://docs.python-requests.org/en/master/
     http://pymysql.readthedocs.io/en/latest/user/examples.html
+    https://www.python.org/dev/peps/pep-0249/
     https://github.com/idan/oauthlib/blob/master/oauthlib/oauth1/rfc5849/__init__.py
 
 TODO: Lots of stuff

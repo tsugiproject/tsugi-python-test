@@ -12,9 +12,8 @@ context2 = 'unittest:context:'+str(random.random())
 link1 = 'unittest:link:'+str(random.random())
 link2 = 'unittest:link:'+str(random.random())
 link3 = 'unittest:link:'+str(random.random())
-print(user1,user2,context1,context2,link1,link2,link3)
 
-connection = pymysql.connect(host=CFG.host,
+conn = pymysql.connect(host=CFG.host,
                              port=CFG.port,
                              user=CFG.user,
                              password=CFG.password,
@@ -22,10 +21,10 @@ connection = pymysql.connect(host=CFG.host,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-cursor = connection.cursor()
+cursor = conn.cursor()
 
 # Clean up old unit test users and contexts
-U.cleanunit(connection, cursor)
+U.cleanunit(conn, cursor)
 
 print('Sending a launch with a bad secret... ',end='')
 
@@ -53,6 +52,7 @@ result = cursor.fetchone()
 if ( result == None ) :
     print('Unable to load secret for key',CFG.oauth_consumer_key)
     exit()
+conn.commit()
 
 CFG.oauth_secret = result['secret']
 
@@ -68,4 +68,12 @@ if ( r.status_code != 200 ) :
 
 print("Received 200 - Success")
 
+u = U.getuser(conn, post)
+print(u)
+
+c = U.getcontext(conn, post)
+print(c)
+
+m = U.getmembership(conn, u, c)
+print(m)
 
