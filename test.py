@@ -6,9 +6,11 @@ import databaseconfig as CFG
 import post as POST
 import util as U
 
-inp = input('Test Java or PHP? ')
+inp = input('Test Java, Node or PHP? ')
 if inp.lower().startswith('j') :
     url = 'http://localhost:8080/tsugi-servlet/hello'
+elif inp.lower().startswith('n') :
+    url = 'http://localhost:3000/lti'
 else :
     url = 'http://localhost:8888/tsugi/mod/map/index.php'
 
