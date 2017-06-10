@@ -12,7 +12,8 @@ if inp.lower().startswith('j') :
 elif inp.lower().startswith('n') :
     url = 'http://localhost:3000/lti'
 else :
-    url = 'http://localhost:8888/tsugi/mod/map/index.php'
+    # This does not work with all tools - use map.
+    url = 'http://localhost:8888/tsugi/mod/attend/index.php'
 
 print('Test URL:',url)
 
@@ -92,4 +93,28 @@ print('Changing lis_person_contact_email_primary... ',end='')
 post['lis_person_contact_email_primary'] = 'p@p.com';
 r = U.launch(CFG,url,post)
 U.verifyDb(conn,post)
+
+print('Changing user_image... ',end='')
+post['user_image'] = 'http://www.dr-chuck.com/csev.jpg';
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+
+print('Changing user_image again... ',end='')
+post['user_image'] = 'http://www.dr-chuck.com/csev_old.jpg';
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+
+services = ['ext_memberships_id', 'ext_memberships_url', 'lineitems_url', 'memberships_url']
+for service in services:
+    for i in range(2):
+        x = 'http://example.com/' + service + '#' + str(i)
+        print('Changing',service,'to',x,'...',end='')
+        if service in post : del post[service]
+        if 'custom_'+service in post : del post['custom_'+service]
+        if i == 1 : 
+            post['custom_'+service] = x
+        else:
+            post[service] = x
+        r = U.launch(CFG,url,post)
+        U.verifyDb(conn,post)
 

@@ -36,6 +36,7 @@ def launch(CFG, url, post, status=200) :
     header = {'Content-Type' : 'application/x-www-form-urlencoded'}
     client = Client(CFG.oauth_consumer_key, client_secret=CFG.oauth_secret, signature_type='BODY')
     uri, headers, body = client.sign(url, 'POST', post, header)
+    print('\nLaunching to',url,end=' ')
     r = requests.post(url, data=body, headers=headers, allow_redirects=False)
     if ( r.status_code == 302 ) :
         new_url = r.headers.get('Location', False)
@@ -53,6 +54,7 @@ def launch(CFG, url, post, status=200) :
             print('Received 302 - Success')
             return r
 
+        print('\nFollowing redirect', new_url,end=' ')
         r = requests.get(new_url, cookies=r.cookies)
 
     if ( status != 200 ) :
@@ -204,6 +206,12 @@ def extractPost(post) :
     ret['link_settings_url'] = fixed.get('custom_link_settings_url', None)
     ret['context_settings_url'] = fixed.get('custom_context_settings_url', None)
 
+    # LTI 2.x Services
+    ret['ext_memberships_id'] = fixed.get('ext_memberships_id', None)
+    ret['ext_memberships_url'] = fixed.get('ext_memberships_url', None)
+    ret['lineitems_url'] = fixed.get('lineitems_url', None)
+    ret['memberships_url'] = fixed.get('memberships_url', None)
+
     ret['context_title'] = fixed.get('context_title', None)
     ret['link_title'] = fixed.get('resource_link_title', None)
 
@@ -251,9 +259,10 @@ def extractPost(post) :
     return ret
 
 def verifyDb(conn,post) :
-    print('Checking database ... ',end='')
+    print('Checking database ... ',end=' ')
     extract = extractPost(post)
     db = extractDb(conn, post)
+    fail = False
     for (k,v) in extract.items() :
         # Might want to fix this...
         if k == 'resource_link_description' : continue
@@ -265,5 +274,16 @@ def verifyDb(conn,post) :
             print(extract)
             print('------ Db')
             print(db)
+            abort()
+        if extract[k] is None : continue
+        if extract[k] != db[k] :
+            print('Value mismatch',k,'Post',extract[k],'Db',db[k])
+            print('------ Post')
+            print(extract)
+            print('------ Db')
+            print(db)
+            abort()
+            fail = True
+    if fail:
             abort()
     print('Passed')
