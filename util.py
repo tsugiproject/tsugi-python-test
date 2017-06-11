@@ -253,8 +253,8 @@ def extractPost(post) :
 
     if ( len(roles) > 0 ) :
         roles = roles.lower()
-        if ( roles.find('instructor') is not False ) : ret['role'] = 1
-        if ( roles.find('administrator') is not False ) : ret['role'] = 1
+        if ( roles.find('instructor') >=0 ) : ret['role'] = 1000
+        if ( roles.find('administrator') >=0 ) : ret['role'] = 5000
 
     return ret
 
