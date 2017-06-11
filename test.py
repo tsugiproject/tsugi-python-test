@@ -111,7 +111,7 @@ for service in services:
         print('Changing',service,'to',x,'...',end='')
         if service in post : del post[service]
         if 'custom_'+service in post : del post['custom_'+service]
-        if i == 1 : 
+        if i == 1 and not service.startswith('ext_') : 
             post['custom_'+service] = x
         else:
             post[service] = x
