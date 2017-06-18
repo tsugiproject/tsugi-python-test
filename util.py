@@ -38,7 +38,7 @@ def launch(CFG, url, post, status=200) :
     uri, headers, body = client.sign(url, 'POST', post, header)
     print('\nLaunching to',url,end=' ')
     r = requests.post(url, data=body, headers=headers, allow_redirects=False)
-    if ( r.status_code == 302 ) :
+    if ( r.status_code == 302 or r.status_code == 303 ) :
         new_url = r.headers.get('Location', False)
         if new_url is False:
             print('No Location header found on redirect')
@@ -123,6 +123,7 @@ def getresult(conn,user,link) :
     sql = "SELECT R.*,S.service_key FROM lti_result AS R LEFT JOIN lti_service as S ON R.service_id = S.service_id WHERE R.user_id = %s AND R.link_id = %s"
     cursor.execute(sql, (user_id, link_id))
     result = cursor.fetchone()
+    # print('\nIII',sql,result)
     conn.commit()
     cursor.close()
     return result
@@ -152,7 +153,7 @@ def maplink(link) :
 
 def mapresult(result) :
     ret = result
-    switch(ret,'service_key','service')
+    # switch(ret,'service_key','service')
     return ret
 
 def extractDb(conn,post):
@@ -198,7 +199,7 @@ def extractPost(post) :
     ret['context_key'] = context_key
 
     # LTI 1.x settings and Outcomes
-    ret['service'] = fixed.get('lis_outcome_service_url', None)
+    ret['service_key'] = fixed.get('lis_outcome_service_url', None)
     ret['sourcedid'] = fixed.get('lis_result_sourcedid', None)
 
     # LTI 2.x settings and Outcomes

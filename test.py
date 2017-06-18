@@ -6,11 +6,14 @@ import databaseconfig as CFG
 import post as POST
 import util as U
 
-inp = input('Test Java, Node or PHP? ')
+inp = input('Test Java, Node, PHP, or pYthon? ')
+
 if inp.lower().startswith('j') :
     url = 'http://localhost:8080/tsugi-servlet/hello'
 elif inp.lower().startswith('n') :
     url = 'http://localhost:3000/lti'
+elif inp.lower().startswith('y') :
+    url = 'http://localhost:8000/tsugi/default/launch'
 else :
     # This does not work with all tools - use map.
     url = 'http://localhost:8888/tsugi/mod/attend/index.php'
@@ -80,6 +83,7 @@ post.update(POST.core)
 post['resource_link_id'] = link1
 post['context_id'] = context1
 post['user_id'] = user1
+post['roles'] = 'Instructor'
 
 r = U.launch(CFG,url,post)
 U.verifyDb(conn,post)
