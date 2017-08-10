@@ -108,6 +108,16 @@ post['user_image'] = 'http://www.dr-chuck.com/csev_old.jpg';
 r = U.launch(CFG,url,post)
 U.verifyDb(conn,post)
 
+print('Changing user_locale... ',end='')
+post['launch_presentation_locale'] = 'pt-BR';
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+
+print('Changing user_locale (Again)... ',end='')
+post['launch_presentation_locale'] = 'pt-PT';
+r = U.launch(CFG,url,post)
+U.verifyDb(conn,post)
+
 services = ['ext_memberships_id', 'ext_memberships_url', 'lineitems_url', 'memberships_url']
 for service in services:
     for i in range(2):

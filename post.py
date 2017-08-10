@@ -9,6 +9,7 @@ core = {
   'tool_consumer_instance_description' : 'University of Information',
   'launch_presentation_css_url' : 'http://localhost:8888/tsugi/lms.css',
   'launch_presentation_return_url' : 'http://lmsng.school.edu/portal/123/page/988/',
+  'launch_presentation_locale' : 'en-US',
   'oauth_callback' : 'about:blank'
 }
 
@@ -22,6 +23,7 @@ learner = {
   'lis_person_sourcedid' : 'ischool.edu:john',
   'lis_result_sourcedid' : '99999999999999999999999999999999',
   'lis_outcome_service_url' : 'http://localhost:8888/tsugi/common/tool_consumer_outcome.php?b64=MTIzNDU6OjpzZWNyZXQ6Ojo=',
+  'launch_presentation_locale' : 'es-ES',
   'roles' : 'Learner' 
 }
 
